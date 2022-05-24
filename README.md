@@ -1,2 +1,2 @@
-# Arduino
-All Arduino related projects
+# MicroController
+All Microcontroller related projects
