@@ -1,0 +1,16 @@
+Project Outputs Generation Report
+---------------------------------
+Start Output Generation At 10:56:57 AM On 3/17/2023
+
+Output: NC Drill Files
+Type  : NC Drill
+From  : PCB Document [FYP_V2.PcbDoc]
+   Generated File[FYP_V2.TXT]
+   Generated File[FYP_V2.LDP]
+   Generated File[FYP_V2.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 10:56:58 AM On 3/17/2023

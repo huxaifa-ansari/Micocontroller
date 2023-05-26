@@ -1,0 +1,1207 @@
+[
+    {
+        "id": "83bf1310b4684587",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "80f8ee872e6dea7e",
+        "type": "function",
+        "z": "83bf1310b4684587",
+        "name": "function 1",
+        "func": "// Input data from sensors\nvar splitted_payload = msg.payload.split(\" \");\nvar tds = parseFloat(splitted_payload[0]);\nvar ph = parseFloat(splitted_payload[1]);\nvar turbidity = parseFloat(splitted_payload[2]);\nvar ammonia = parseFloat(splitted_payload[3]);\nvar temperature = parseFloat(splitted_payload[4]);\n\n// Get current date and time\nvar dateTime = new Date().toISOString().replace(\"T\", \" \").replace(\"Z\", \"\");\n\n// Create the SQL query\nvar sqlQuery = \"INSERT INTO data10(date_time, tds, ph, turbidity, ammonia, temperature) VALUES ('\" + dateTime + \"', \" + tds + \", \" + ph + \", \" + turbidity + \", \" + ammonia + \", \"+ temperature +\" )\";\n\n// Send the SQL query to the Postgres node\nmsg.query = sqlQuery;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "a1e0059f8898ee07"
+            ]
+        ]
+    },
+    {
+        "id": "a1a8385396b92243",
+        "type": "mqtt in",
+        "z": "83bf1310b4684587",
+        "name": "esp32/test/1222221",
+        "topic": "esp32/test/1222221",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0ac01927d9e8e66a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 40,
+        "wires": [
+            [
+                "80f8ee872e6dea7e",
+                "387a7c60e552e2fa"
+            ]
+        ]
+    },
+    {
+        "id": "a1e0059f8898ee07",
+        "type": "postgresql",
+        "z": "83bf1310b4684587",
+        "name": "query node",
+        "query": "SELECT * FROM public.data10;",
+        "postgreSQLConfig": "62e72c7baca6a989",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 330,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "387a7c60e552e2fa",
+        "type": "debug",
+        "z": "83bf1310b4684587",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 120,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "7ed3492e50127b33",
+        "type": "ui_gauge",
+        "z": "83bf1310b4684587",
+        "name": "ammonia",
+        "group": "7ccde2ba.796d34",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "ammonia",
+        "label": "g/ml",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 800,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "b8e43665e779c62b",
+        "type": "mqtt in",
+        "z": "83bf1310b4684587",
+        "name": "esp32/test/1222221/amm",
+        "topic": "esp32/test/1222221/amm",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0ac01927d9e8e66a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 550,
+        "y": 40,
+        "wires": [
+            [
+                "7ed3492e50127b33",
+                "f88891e8a5ce22f5"
+            ]
+        ]
+    },
+    {
+        "id": "f88891e8a5ce22f5",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "d7c12b74.277828",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "ammonia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 760,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e79c5e776109736b",
+        "type": "mqtt in",
+        "z": "83bf1310b4684587",
+        "name": "esp32/test/1222221/temp",
+        "topic": "esp32/test/1222221/temp",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0ac01927d9e8e66a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 550,
+        "y": 120,
+        "wires": [
+            [
+                "f86b792f300da6bf",
+                "d4187fdc7429d7c8"
+            ]
+        ]
+    },
+    {
+        "id": "f86b792f300da6bf",
+        "type": "ui_gauge",
+        "z": "83bf1310b4684587",
+        "name": "temperature",
+        "group": "7ccde2ba.796d34",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "temperature",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "20",
+        "max": "35",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 770,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d4187fdc7429d7c8",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "temperature",
+        "group": "d7c12b74.277828",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 770,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "13e81e7b.9fd41a",
+        "type": "ui_gauge",
+        "z": "83bf1310b4684587",
+        "name": "ph",
+        "group": "7ccde2ba.796d34",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "ph",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "14",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 770,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7a908f84.d8498",
+        "type": "ui_gauge",
+        "z": "83bf1310b4684587",
+        "name": "turbidity",
+        "group": "7ccde2ba.796d34",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "turbidity",
+        "label": "NTU",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 760,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d26dfad635c64568",
+        "type": "mqtt in",
+        "z": "83bf1310b4684587",
+        "name": "esp32/test/1222221/ph",
+        "topic": "esp32/test/1222221/ph",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0ac01927d9e8e66a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 560,
+        "y": 220,
+        "wires": [
+            [
+                "13e81e7b.9fd41a",
+                "72721ed268bbcf78"
+            ]
+        ]
+    },
+    {
+        "id": "13028ed9ace34283",
+        "type": "mqtt in",
+        "z": "83bf1310b4684587",
+        "name": "esp32/test/1222221/tur",
+        "topic": "esp32/test/1222221/tur",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0ac01927d9e8e66a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 560,
+        "y": 280,
+        "wires": [
+            [
+                "7a908f84.d8498",
+                "9daf511821dffaf7"
+            ]
+        ]
+    },
+    {
+        "id": "144859b54027c42d",
+        "type": "ui_gauge",
+        "z": "83bf1310b4684587",
+        "name": "tds",
+        "group": "7ccde2ba.796d34",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "tds",
+        "label": "mg/l",
+        "format": "{{value}}",
+        "min": "300",
+        "max": "600",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 750,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "24c7bc28d723a993",
+        "type": "mqtt in",
+        "z": "83bf1310b4684587",
+        "name": "esp32/test/1222221/tds",
+        "topic": "esp32/test/1222221/tds",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "0ac01927d9e8e66a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 560,
+        "y": 320,
+        "wires": [
+            [
+                "144859b54027c42d",
+                "e48445c3b8c7fcc1"
+            ]
+        ]
+    },
+    {
+        "id": "72721ed268bbcf78",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "d7c12b74.277828",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "label": "ph",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 770,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9daf511821dffaf7",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "d7c12b74.277828",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "turbidity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 760,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e48445c3b8c7fcc1",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "d7c12b74.277828",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "tds",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 750,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "688351ebea8084b3",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "1502da9719889bbe",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "label": "tds",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 290,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "15643f1d140b20a4",
+        "type": "function",
+        "z": "83bf1310b4684587",
+        "name": "function 9",
+        "func": "// var chartData = {\n//     \"labels\": [],\n//     \"series\": [\n//         { name: 'Predictions', data: [] },\n//         { name: 'Data', data: [] }\n//     ],\n//     \"data\": []\n// };\n\n// // msg.payload.forEach(function (row) {\n// chartData.labels.push(msg.payload.ds);\n// chartData.series[0].data.push(msg.payload.predictions);\n// chartData.series[1].data.push(msg.payload.data);\n// // });\n\n// msg.payload = chartData;\n// msg.payload = Math.round(Math.random() * 100);\n// return msg;\n\n// var msg1={};\n// msg1.payload = msg.payload[0].predictions\n// msg1.topic=\"line1\"\n// var msg2={};\n// msg2.payload = msg.payload[0].data\n// msg2.topic = \"line2\"\n// return [msg1, msg2]\n\nvar chartData={};\nvar datas=[]\nvar preds=[]\n\nmsg.payload.forEach(function (row) {\n    var timestamp= row.ds\n    var data=row.data\n    var prediction = row.predictions\n    var dat={\"x\":timestamp,\"y\":data}\n    var pred={\"x\":timestamp,\"y\":prediction}\n\ndatas.push(dat);\npreds.push(pred);\n\n\n });\n\nchartData.payload = [{\n    \"series\": [\"Data\", \"Prediction\"],\n    \"data\": [\n        datas,\n        preds\n    ],\n    \"labels\": [\"\"]\n}]\nreturn chartData;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 80,
+        "y": 560,
+        "wires": [
+            [
+                "688351ebea8084b3"
+            ]
+        ]
+    },
+    {
+        "id": "fbd3dbe56a73634b",
+        "type": "postgresql",
+        "z": "83bf1310b4684587",
+        "name": "query node",
+        "query": "SELECT ds, predictions, data \nFROM tds;\n",
+        "postgreSQLConfig": "62e72c7baca6a989",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 270,
+        "y": 500,
+        "wires": [
+            [
+                "15643f1d140b20a4"
+            ]
+        ]
+    },
+    {
+        "id": "8b3bc303de365f85",
+        "type": "inject",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 500,
+        "wires": [
+            [
+                "fbd3dbe56a73634b"
+            ]
+        ]
+    },
+    {
+        "id": "e6a6bb21fbbed851",
+        "type": "function",
+        "z": "83bf1310b4684587",
+        "name": "function 7",
+        "func": "// var chartData = {\n//     \"labels\": [],\n//     \"series\": [\n//         { name: 'Predictions', data: [] },\n//         { name: 'Data', data: [] }\n//     ],\n//     \"data\": []\n// };\n\n// // msg.payload.forEach(function (row) {\n// chartData.labels.push(msg.payload.ds);\n// chartData.series[0].data.push(msg.payload.predictions);\n// chartData.series[1].data.push(msg.payload.data);\n// // });\n\n// msg.payload = chartData;\n// msg.payload = Math.round(Math.random() * 100);\n// return msg;\n\n// var msg1={};\n// msg1.payload = msg.payload[0].predictions\n// msg1.topic=\"line1\"\n// var msg2={};\n// msg2.payload = msg.payload[0].data\n// msg2.topic = \"line2\"\n// return [msg1, msg2]\n\nvar chartData={};\nvar datas=[]\nvar preds=[]\n\nmsg.payload.forEach(function (row) {\n    var timestamp= row.ds\n    var data=row.data\n    var prediction = row.predictions\n    var dat={\"x\":timestamp,\"y\":data}\n    var pred={\"x\":timestamp,\"y\":prediction}\n\ndatas.push(dat);\npreds.push(pred);\n\n\n });\n\nchartData.payload = [{\n    \"series\": [\"Data\", \"Prediction\"],\n    \"data\": [\n        datas,\n        preds\n    ],\n    \"labels\": [\"\"]\n}]\nreturn chartData;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 520,
+        "wires": [
+            [
+                "0de6b70e18a3e662"
+            ]
+        ]
+    },
+    {
+        "id": "0de6b70e18a3e662",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "1502da9719889bbe",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "ammonia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 560,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "837d6c08d880fd3d",
+        "type": "function",
+        "z": "83bf1310b4684587",
+        "name": "function 8",
+        "func": "// var chartData = {\n//     \"labels\": [],\n//     \"series\": [\n//         { name: 'Predictions', data: [] },\n//         { name: 'Data', data: [] }\n//     ],\n//     \"data\": []\n// };\n\n// // msg.payload.forEach(function (row) {\n// chartData.labels.push(msg.payload.ds);\n// chartData.series[0].data.push(msg.payload.predictions);\n// chartData.series[1].data.push(msg.payload.data);\n// // });\n\n// msg.payload = chartData;\n// msg.payload = Math.round(Math.random() * 100);\n// return msg;\n\n// var msg1={};\n// msg1.payload = msg.payload[0].predictions\n// msg1.topic=\"line1\"\n// var msg2={};\n// msg2.payload = msg.payload[0].data\n// msg2.topic = \"line2\"\n// return [msg1, msg2]\n\nvar chartData={};\nvar datas=[]\nvar preds=[]\n\nmsg.payload.forEach(function (row) {\n    var timestamp= row.ds\n    var data=row.data\n    var prediction = row.predictions\n    var dat={\"x\":timestamp,\"y\":data}\n    var pred={\"x\":timestamp,\"y\":prediction}\n\ndatas.push(dat);\npreds.push(pred);\n\n\n });\n\nchartData.payload = [{\n    \"series\": [\"Data\", \"Prediction\"],\n    \"data\": [\n        datas,\n        preds\n    ],\n    \"labels\": [\"\"]\n}]\nreturn chartData;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 500,
+        "wires": [
+            [
+                "7c572ada0169aea5"
+            ]
+        ]
+    },
+    {
+        "id": "7c572ada0169aea5",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "1502da9719889bbe",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "ph",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 750,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b6bcb69e08bc8434",
+        "type": "postgresql",
+        "z": "83bf1310b4684587",
+        "name": "query node",
+        "query": "SELECT ds, predictions, data \nFROM ph;\n",
+        "postgreSQLConfig": "62e72c7baca6a989",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 910,
+        "y": 500,
+        "wires": [
+            [
+                "837d6c08d880fd3d"
+            ]
+        ]
+    },
+    {
+        "id": "ed51475bbb661bd1",
+        "type": "postgresql",
+        "z": "83bf1310b4684587",
+        "name": "query node",
+        "query": "SELECT ds, predictions, data \nFROM amm;\n",
+        "postgreSQLConfig": "62e72c7baca6a989",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 550,
+        "y": 460,
+        "wires": [
+            [
+                "e6a6bb21fbbed851"
+            ]
+        ]
+    },
+    {
+        "id": "b6dd7d64c8fc17f5",
+        "type": "inject",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 930,
+        "y": 400,
+        "wires": [
+            [
+                "b6bcb69e08bc8434"
+            ]
+        ]
+    },
+    {
+        "id": "c2c573594cfe5782",
+        "type": "inject",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 550,
+        "y": 400,
+        "wires": [
+            [
+                "ed51475bbb661bd1"
+            ]
+        ]
+    },
+    {
+        "id": "6cc849295ea2b64b",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "1502da9719889bbe",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7d9859b124c28bc5",
+        "type": "function",
+        "z": "83bf1310b4684587",
+        "name": "function 5",
+        "func": "// var chartData = {\n//     \"labels\": [],\n//     \"series\": [\n//         { name: 'Predictions', data: [] },\n//         { name: 'Data', data: [] }\n//     ],\n//     \"data\": []\n// };\n\n// // msg.payload.forEach(function (row) {\n// chartData.labels.push(msg.payload.ds);\n// chartData.series[0].data.push(msg.payload.predictions);\n// chartData.series[1].data.push(msg.payload.data);\n// // });\n\n// msg.payload = chartData;\n// msg.payload = Math.round(Math.random() * 100);\n// return msg;\n\n// var msg1={};\n// msg1.payload = msg.payload[0].predictions\n// msg1.topic=\"line1\"\n// var msg2={};\n// msg2.payload = msg.payload[0].data\n// msg2.topic = \"line2\"\n// return [msg1, msg2]\nvar chartData = {};\nvar datas = [];\nvar preds = [];\n\nmsg.payload.forEach(function (row) {\n    var timestamp = Date.parse(row.ds); // Convert timestamp to epoch format\n\n    var data = row.data;\n    var prediction = row.predictions;\n    var dat = { \"x\": timestamp, \"y\": data };\n    var pred = { \"x\": timestamp, \"y\": prediction };\n\n    datas.push(dat);\n    preds.push(pred);\n});\n\nchartData.payload = [{\n    \"series\": [\"Data\", \"Prediction\"],\n    \"data\": [\n        datas,\n        preds\n    ],\n    \"labels\": [\"\"]\n}];\nreturn chartData;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 100,
+        "y": 360,
+        "wires": [
+            [
+                "6cc849295ea2b64b"
+            ]
+        ]
+    },
+    {
+        "id": "50fb1865dd2f5269",
+        "type": "function",
+        "z": "83bf1310b4684587",
+        "name": "function 6",
+        "func": "// var chartData = {\n//     \"labels\": [],\n//     \"series\": [\n//         { name: 'Predictions', data: [] },\n//         { name: 'Data', data: [] }\n//     ],\n//     \"data\": []\n// };\n\n// // msg.payload.forEach(function (row) {\n// chartData.labels.push(msg.payload.ds);\n// chartData.series[0].data.push(msg.payload.predictions);\n// chartData.series[1].data.push(msg.payload.data);\n// // });\n\n// msg.payload = chartData;\n// msg.payload = Math.round(Math.random() * 100);\n// return msg;\n\n// var msg1={};\n// msg1.payload = msg.payload[0].predictions\n// msg1.topic=\"line1\"\n// var msg2={};\n// msg2.payload = msg.payload[0].data\n// msg2.topic = \"line2\"\n// return [msg1, msg2]\n\nvar chartData={};\nvar datas=[]\nvar preds=[]\n\nmsg.payload.forEach(function (row) {\n    var timestamp= row.ds\n    var data=row.data\n    var prediction = row.predictions\n    var dat={\"x\":timestamp,\"y\":data}\n    var pred={\"x\":timestamp,\"y\":prediction}\n\ndatas.push(dat);\npreds.push(pred);\n\n\n });\n\nchartData.payload = [{\n    \"series\": [\"Data\", \"Prediction\"],\n    \"data\": [\n        datas,\n        preds\n    ],\n    \"labels\": [\"\"]\n}]\nreturn chartData;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 380,
+        "wires": [
+            [
+                "15034ef3e0cdbae9"
+            ]
+        ]
+    },
+    {
+        "id": "b3f50c94489a8363",
+        "type": "postgresql",
+        "z": "83bf1310b4684587",
+        "name": "query node",
+        "query": "SELECT ds, predictions, data \nFROM temp;\n",
+        "postgreSQLConfig": "62e72c7baca6a989",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 110,
+        "y": 280,
+        "wires": [
+            [
+                "7d9859b124c28bc5"
+            ]
+        ]
+    },
+    {
+        "id": "27d5cb17e682e29b",
+        "type": "postgresql",
+        "z": "83bf1310b4684587",
+        "name": "query node",
+        "query": "SELECT ds, predictions, data \nFROM turb;\n",
+        "postgreSQLConfig": "62e72c7baca6a989",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 330,
+        "y": 300,
+        "wires": [
+            [
+                "50fb1865dd2f5269"
+            ]
+        ]
+    },
+    {
+        "id": "15034ef3e0cdbae9",
+        "type": "ui_chart",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "group": "1502da9719889bbe",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "turbidity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 340,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1332e2ec72df09b3",
+        "type": "inject",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "27d5cb17e682e29b"
+            ]
+        ]
+    },
+    {
+        "id": "2f6165099bac4825",
+        "type": "inject",
+        "z": "83bf1310b4684587",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 200,
+        "wires": [
+            [
+                "b3f50c94489a8363"
+            ]
+        ]
+    },
+    {
+        "id": "0ac01927d9e8e66a",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "3",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "62e72c7baca6a989",
+        "type": "postgreSQLConfig",
+        "name": "postgrestest",
+        "host": "127.0.0.1",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "postgres",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "151214",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "7ccde2ba.796d34",
+        "type": "ui_group",
+        "name": "Monitor",
+        "tab": "9fd3f40dd395258e",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d7c12b74.277828",
+        "type": "ui_group",
+        "name": "Charts",
+        "tab": "9fd3f40dd395258e",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1502da9719889bbe",
+        "type": "ui_group",
+        "name": "Charts",
+        "tab": "eb6c3acd92a834c5",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9fd3f40dd395258e",
+        "type": "ui_tab",
+        "name": "ESP32",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "eb6c3acd92a834c5",
+        "type": "ui_tab",
+        "name": "Predictions",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]

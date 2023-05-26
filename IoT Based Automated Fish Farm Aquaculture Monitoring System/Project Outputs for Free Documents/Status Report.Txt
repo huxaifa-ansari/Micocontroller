@@ -1,0 +1,18 @@
+Project Outputs Generation Report
+---------------------------------
+Start Output Generation At 10:56:50 AM On 3/17/2023
+
+Output: Gerber Files
+Type  : Gerber
+From  : Variant [[No Variations]] of PCB Document [FYP_V2.PcbDoc]
+   Generated File[FYP_V2.GBL]
+   Generated File[FYP_V2.GM1]
+   Generated File[FYP_V2.RUL]
+   Generated File[FYP_V2.EXTREP]
+   Generated File[FYP_V2.REP]
+
+
+Files Generated   : 5
+Documents Printed : 0
+
+Finished Output Generation At 10:56:51 AM On 3/17/2023
